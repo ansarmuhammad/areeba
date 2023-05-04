@@ -9,9 +9,9 @@ import { Errors, UserService } from '../core';
   templateUrl: './auth.component.html'
 })
 export class AuthComponent implements OnInit {
-  authType: String = '';
-  title: String = '';
-  errors: Errors = {errors: {}};
+  authType: string = '';
+  title: string = '';
+  errors: Errors = { errors: {} };
   isSubmitting = false;
   authForm: UntypedFormGroup;
 
@@ -46,17 +46,17 @@ export class AuthComponent implements OnInit {
 
   submitForm() {
     this.isSubmitting = true;
-    this.errors = {errors: {}};
+    this.errors = { errors: {} };
 
     const credentials = this.authForm.value;
     this.userService
-    .attemptAuth(this.authType, credentials)
-    .subscribe(
-      data => this.router.navigateByUrl('/'),
-      err => {
-        this.errors = err;
-        this.isSubmitting = false;
-      }
-    );
+      .attemptAuth(this.authType, credentials)
+      .subscribe(
+        data => this.router.navigateByUrl('/'),
+        err => {
+          this.errors = err;
+          this.isSubmitting = false;
+        }
+      );
   }
 }

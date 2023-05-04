@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ArticleComponent } from "./article.component";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Article, ArticlesService, CommentsService, Profile, User, UserService } from "../core";
+import { Article, ArticlesService, CommentsService, Profile, User, UserService, Comment } from "../core";
 import { of, throwError } from "rxjs";
 import { ArticleMetaComponent, FavoriteButtonComponent, FollowButtonComponent } from "../shared";
 import { MarkdownPipe } from "./markdown.pipe";
-import { Comment } from "../core";
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component, DebugElement, Directive } from "@angular/core";
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -58,7 +57,6 @@ describe("ArticleComponent", () => {
   let commentService: CommentsService;
   let component: ArticleComponent;
   let fixture: ComponentFixture<ArticleComponent>;
-  let debugElement: DebugElement;
   let mockArticleService: jasmine.SpyObj<ArticlesService>;
   let mockUserService: jasmine.SpyObj<UserService>;
   const route = ({ data: of({ 'article': article }) } as any) as ActivatedRoute;
@@ -83,6 +81,7 @@ describe("ArticleComponent", () => {
         })
       ],
       providers: [
+        // Set up the mock services for the test
         {
           provide: ActivatedRoute,
           useValue: route
@@ -116,7 +115,6 @@ describe("ArticleComponent", () => {
     spy.currentUser = of(user);
     commentService = TestBed.inject(CommentsService);
     fixture.detectChanges();
-    debugElement = fixture.debugElement;
   });
 
   it('should create component', () => {
@@ -186,7 +184,7 @@ describe("ArticleComponent", () => {
   it('should test addComment and check the service returns error', () => {
     component.comments = comments;
     const errorResponse = new Error('httpService.post error');
-    let spy = spyOn(commentService, 'add').and.returnValue(throwError(errorResponse));
+    spyOn(commentService, 'add').and.returnValue(throwError(errorResponse));
     component.addComment();
     expect(component.isSubmitting).toBeFalse();
     expect(component.commentFormErrors).not.toBeNull();
